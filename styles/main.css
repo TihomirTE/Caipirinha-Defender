@@ -1,0 +1,15 @@
+canvas {
+    position: absolute;
+}
+
+#player-canvas {
+    z-index: 10
+}
+
+#background-canvas {
+    z-index: 1;
+}
+
+.sprites{
+    display: none;
+}
