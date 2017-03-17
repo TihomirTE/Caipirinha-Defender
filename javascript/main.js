@@ -48,7 +48,7 @@ window.addEventListener('load', function () {
     enemyCanvas.height = HEIGHT;
 
     let enemy = document.getElementById('enemy-sprite-1');
-    let enemiesArmy = spawnEnemies(enemy, enemyContext, 1, WIDTH);
+    let enemiesArmy = spawnEnemies(enemy, enemyContext, 2, WIDTH);
 
     //BACKGROUND//
     let background = createBackground({
@@ -85,18 +85,23 @@ window.addEventListener('load', function () {
         }
     });
 
-
     //execute moving operations (rendering)
     function gameLoop() {
         //PLAYER//
         let lastPlaneCoordinates = playerMove(plane);
         planeSprite.render(plane.coordinates, lastPlaneCoordinates);
 
-        //ENEMY//
+        //ENEMY//        
         for (let i = 0; i < enemiesArmy.movable.length; i += 1) {
             let enemy = enemiesArmy.movable[i];
             let lastEnemyCoordinates = enemy.move();
             enemiesArmy.sprites[i].render(enemy.coordinates, lastEnemyCoordinates);
+
+            //collide (game over)
+            if (plane.direction.x >= (enemy.coordinates.x - (plane.width / 2))) {
+                playerContext.drawImage(document.getElementById('game-over'), 0, 0);
+                return;
+            }
         }
 
         //BACKGROUND//

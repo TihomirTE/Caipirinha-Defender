@@ -10,18 +10,13 @@ function createMovableElements(options) {
         return previousPosition;
     }
 
-    function collide(enemy) {
-      
-    }
-
     let element = {
         coordinates: options.coordinates,
         direction: options.direction || {x: 0, y: 0},
         height: options.height,
         width: options.width,
         speed: options.speed,
-        move: move,
-        collide: collide
+        move: move
     };
 
     return element;
