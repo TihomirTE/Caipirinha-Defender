@@ -8,21 +8,23 @@
 <body>
 
 <!--CANVAS-->
-<canvas id="player-canvas"></canvas>
 <canvas id="background-canvas"></canvas>
+<canvas id="player-canvas"></canvas>
+<canvas id="enemy-canvas"></canvas>
 
 <!--IMAGES-->
+<img src="./images/backgrounds/background-1.png" id="background-1" class="sprites">
 <!--images class "sprites" to use main.css-->
 <img src="./images/straightMove.png" id="plane-spriteStraight" class="sprites">
 <img src="./images/leftMove.png" id="plane-spriteLeft" class="sprites">
 <img src="./images/rightMove.png" id="plane-spriteRight" class="sprites">
-
-<img src="./images/backgrounds/background-1.png" id="background" class="sprites">
+<img src="./images/enemies/enemy-1.png" id="enemy-sprite-1" class="sprites">
 
 <!--SCRIPTS-->
 <script src="./javascript/backgroundGenerator.js"></script>
 <script src="./javascript/spritesGenerator.js"></script>
 <script src="./javascript/main.js"></script>
 <script src="./javascript/moveElements.js"></script>
+<script src="./javascript/spawnEnemies.js"></script>
 </body>
 </html>

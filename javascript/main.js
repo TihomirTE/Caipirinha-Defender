@@ -4,17 +4,16 @@ window.addEventListener('load', function () {
     const WIDTH = 1024;
     const HEIGHT = 600;
 
+    //PLAYER//
     let playerCanvas = document.getElementById('player-canvas');
     let playerContext = playerCanvas.getContext('2d');
 
     playerCanvas.width = WIDTH;
     playerCanvas.height = HEIGHT;
 
-
     let playerStraight = document.getElementById('plane-spriteStraight');
     let playerLeft = document.getElementById('plane-spriteLeft');
     let playerRight = document.getElementById('plane-spriteRight');
-
 
     let planeSprite = createSprite({
         spritesheet: playerStraight,
@@ -24,18 +23,38 @@ window.addEventListener('load', function () {
         framesNumber: 1
     });
 
+    let plane = createMovableElements({
+        coordinates: {x: 0, y: 0},
+        direction: {x: 10, y: (HEIGHT / 2) - planeSprite.height}, // start position
+        height: planeSprite.height,
+        width: planeSprite.width,
+        speed: 20
+    });
+
+    function playerMove(player) {
+        //moves only left and right
+        let previousPosition = {x: player.coordinates.x, y: player.coordinates.y};
+        //clear previous position
+        player.coordinates.y = player.direction.y;
+
+        return previousPosition;
+    }
+
+    //ENEMY//
+    let enemyCanvas = document.getElementById('enemy-canvas');
+    let enemyContext = enemyCanvas.getContext('2d');
+
+    enemyCanvas.width = WIDTH;
+    enemyCanvas.height = HEIGHT;
+
+    let enemy = document.getElementById('enemy-sprite-1');
+    let enemiesArmy = spawnEnemies(enemy, enemyContext, 1, WIDTH);
+
+    //BACKGROUND//
     let background = createBackground({
         width: WIDTH,
         height: HEIGHT,
         speed: 10
-    });
-
-
-    let plane = createMovableElements({
-        coordinates: {x: 10, y: (HEIGHT / 2) - planeSprite.height}, // start position
-        direction: {x: 10, y: (HEIGHT / 2) - planeSprite.height},
-        height: planeSprite.height,
-        width: planeSprite.width
     });
 
 
@@ -44,14 +63,14 @@ window.addEventListener('load', function () {
                 //up
                 case 38:
                     if (plane.direction.y > 0) {
-                        plane.direction.y -= 20;
+                        plane.direction.y -= plane.speed;
                         planeSprite.spritesheet = playerLeft;
                     }
                     break;
                 //down
                 case 40:
                     if (plane.direction.y < HEIGHT - planeSprite.height) {
-                        plane.direction.y += 20;
+                        plane.direction.y += plane.speed;
                         planeSprite.spritesheet = playerRight;
                     }
                     break;
@@ -62,22 +81,27 @@ window.addEventListener('load', function () {
     window.addEventListener('keyup', function (event) {
         if (event.keyCode === 38 || event.keyCode === 40) {
             planeSprite.spritesheet = playerStraight;
-            //normalize plane image
+            //normalize plane position image
         }
     });
 
 
     //execute moving operations (rendering)
     function gameLoop() {
-
-        let lastPlaneCoordinates = plane.move();
-
+        //PLAYER//
+        let lastPlaneCoordinates = playerMove(plane);
         planeSprite.render(plane.coordinates, lastPlaneCoordinates);
 
+        //ENEMY//
+        for (let i = 0; i < enemiesArmy.movable.length; i += 1) {
+            let enemy = enemiesArmy.movable[i];
+            let lastEnemyCoordinates = enemy.move();
+            enemiesArmy.sprites[i].render(enemy.coordinates, lastEnemyCoordinates);
+        }
+
+        //BACKGROUND//
         background.render();
         background.update();
-
-
         window.requestAnimationFrame(gameLoop);
     }
 

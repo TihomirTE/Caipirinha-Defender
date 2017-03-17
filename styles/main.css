@@ -6,6 +6,10 @@ canvas {
     z-index: 10
 }
 
+#enemy-canvas {
+    z-index: 5
+}
+
 #background-canvas {
     z-index: 1;
 }

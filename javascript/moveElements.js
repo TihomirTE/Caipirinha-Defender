@@ -5,20 +5,21 @@ function createMovableElements(options) {
         //moves only up and down
         let previousPosition = {x: this.coordinates.x, y: this.coordinates.y};
         //clear previous position
-        this.coordinates.y = this.direction.y;
+        this.coordinates.x -= (this.direction.x + options.speed); //move left
 
         return previousPosition;
     }
 
-    function collide() {
-       //TODO: implement collide with other objects (enemies)
+    function collide(enemy) {
+      
     }
 
     let element = {
         coordinates: options.coordinates,
-        direction: options.direction,
+        direction: options.direction || {x: 0, y: 0},
         height: options.height,
         width: options.width,
+        speed: options.speed,
         move: move,
         collide: collide
     };
