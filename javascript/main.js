@@ -47,9 +47,6 @@ window.addEventListener('load', function () {
                         plane.direction.y -= 20;
                         planeSprite.spritesheet = playerLeft;
                     }
-                    else {
-                        planeSprite.spritesheet = playerStraight;
-                    }
                     break;
                 //down
                 case 40:
@@ -57,13 +54,18 @@ window.addEventListener('load', function () {
                         plane.direction.y += 20;
                         planeSprite.spritesheet = playerRight;
                     }
-                    else {
-                        planeSprite.spritesheet = playerStraight;
-                    }
                     break;
             }
         }
     );
+
+    window.addEventListener('keyup', function (event) {
+        if (event.keyCode === 38 || event.keyCode === 40) {
+            planeSprite.spritesheet = playerStraight;
+            //normalize plane image
+        }
+    });
+
 
     //execute moving operations (rendering)
     function gameLoop() {
