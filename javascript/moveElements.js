@@ -8,7 +8,7 @@ function createMovableElements(options) {
         if (direction === 'left') {
             this.coordinates.x -= (this.direction.x + options.speed);
         }
-        else if ('right') {
+        else if (direction === 'right') {
             this.coordinates.x += (this.direction.x + options.speed);
         }
         return previousPosition;
