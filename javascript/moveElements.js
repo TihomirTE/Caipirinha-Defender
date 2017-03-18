@@ -1,17 +1,21 @@
 function createMovableElements(options) {
     "use strict";
 
-    function move() {
+    function move(direction) {
         //moves only up and down
         let previousPosition = {x: this.coordinates.x, y: this.coordinates.y};
         //clear previous position
-        this.coordinates.x -= (this.direction.x + options.speed); //move left
-
+        if (direction === 'left') {
+            this.coordinates.x -= (this.direction.x + options.speed);
+        }
+        else if ('right') {
+            this.coordinates.x += (this.direction.x + options.speed);
+        }
         return previousPosition;
     }
 
     let element = {
-        coordinates: options.coordinates,
+        coordinates: options.coordinates || {x: 0, y: 0},
         direction: options.direction || {x: 0, y: 0},
         height: options.height,
         width: options.width,

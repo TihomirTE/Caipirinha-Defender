@@ -1,8 +1,6 @@
 function createSprite(options) {
     "use strict";
 
-    //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
-
     function render(drawCoordinates, clearCoordinates) {
 
         this.context.clearRect(

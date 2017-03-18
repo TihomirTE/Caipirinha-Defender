@@ -1,8 +1,6 @@
 function createBackground(options) {
     "use strict";
 
-    // http://blog.sklambert.com/html5-canvas-game-panning-a-background/
-
     let backgroundCanvas = document.getElementById('background-canvas');
     let context = backgroundCanvas.getContext('2d');
     let backgroundImage = document.getElementById('background-1');
@@ -41,5 +39,4 @@ function createBackground(options) {
     };
 
     return background;
-
 }
