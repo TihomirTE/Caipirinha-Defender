@@ -153,11 +153,11 @@ window.addEventListener('load', function () {
 
                             enemiesArmy.movable.splice(i, 1); //delete enemy from the army
 
-                            rocketContext.clearRect(rocket.coordinates.x, rocket.coordinates.y,
-                                rocketImg.width, rocketImg.height); //clear rocket
+                            rocketContext.clearRect(rocketUnit.coordinates.x, rocketUnit.coordinates.y,
+                                rocketUnit.width, rocketUnit.height); //clear rocket
 
                             enemyContext.clearRect(enemyUnit.coordinates.x, enemyUnit.coordinates.y,
-                                enemy.width, enemy.height); //clear enemy
+                                enemyUnit.width, enemyUnit.height); //clear enemy
 
                             rocketsDepot.length = 0; //clear rocket depot
                             isRocketShoot = false;
