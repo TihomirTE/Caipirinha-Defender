@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Caipirinha Defender</title>
     <link rel="stylesheet" href="styles/main.css">
 </head>
+
 <body>
 
-<!--CANVAS-->
-<canvas id="background-canvas"></canvas>
-<canvas id="player-canvas"></canvas>
-<canvas id="enemy-canvas"></canvas>
-<canvas id="rocket-canvas"></canvas>
+    <!--CANVAS-->
+    <canvas id="background-canvas"></canvas>
+    <canvas id="player-canvas"></canvas>
+    <canvas id="enemy-canvas"></canvas>
+    <canvas id="rocket-canvas"></canvas>
+    <canvas id="ball-canvas"></canvas>
 
 
-<!--IMAGES-->
-<img src="./images/backgrounds/background-1.png" id="background-1" class="sprites">
-<!--images class "sprites" to use main.css-->
-<img src="./images/game-over.png" id="game-over">
-<img src="./images/game-win.png" id="game-win">
-<img src="./images/rocket.png" id="rocket" class="sprites">
-<img src="./images/player/straightMove.png" id="plane-spriteStraight" class="sprites">
-<img src="./images/player/leftMove.png" id="plane-spriteLeft" class="sprites">
-<img src="./images/player/rightMove.png" id="plane-spriteRight" class="sprites">
-<img src="./images/enemies/enemy-1.png" id="enemy-sprite-1" class="sprites">
+    <!--IMAGES-->
+    <img src="./images/backgrounds/background-1.png" id="background-1" class="sprites">
+    <!--images class "sprites" to use main.css-->
+    <img src="./images/game-over.png" id="game-over">
+    <img src="./images/game-win.png" id="game-win">
+    <img src="./images/rocket.png" id="rocket" class="sprites">
+    <img src="./images/player/straightMove.png" id="plane-spriteStraight" class="sprites">
+    <img src="./images/player/leftMove.png" id="plane-spriteLeft" class="sprites">
+    <img src="./images/player/rightMove.png" id="plane-spriteRight" class="sprites">
+    <img src="./images/enemies/enemy-1.png" id="enemy-sprite-1" class="sprites">
+    <img src="./images/enemies/cannon-1.png" id="cannon-sprite-1" class="sprites">
 
 
-<!--SCRIPTS-->
-<script src="./javascript/backgroundGenerator.js"></script>
-<script src="./javascript/spritesGenerator.js"></script>
-<script src="./javascript/main.js"></script>
-<script src="./javascript/moveElements.js"></script>
-<script src="./javascript/spawnEnemies.js"></script>
+    <!--SCRIPTS-->
+    <script src="./javascript/backgroundGenerator.js"></script>
+    <script src="./javascript/spritesGenerator.js"></script>
+    <script src="./javascript/main.js"></script>
+    <script src="./javascript/moveElements.js"></script>
+    <script src="./javascript/spawnEnemies.js"></script>
 </body>
+
 </html>
