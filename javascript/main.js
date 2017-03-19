@@ -77,10 +77,12 @@ window.addEventListener('load', function () {
         let background = createBackground({
             width: WIDTH,
             height: HEIGHT,
-            speed: 10
+            speed: 7
         });
 
-
+        let isRocketShoot = false;
+        let isButtonFree = true;
+        let isEnemyKilled = false;
         window.addEventListener('keydown', function (event) {
             switch (event.keyCode) {
                 //up
@@ -97,22 +99,24 @@ window.addEventListener('load', function () {
                         planeSprite.spritesheet = playerRight;
                     }
                     break;
+                //shoot
+                case 32:
+                    if (isButtonFree) {
+                        isRocketShoot = true;
+                        rocket.coordinates.x = plane.direction.x + 60;
+                        rocket.coordinates.y = plane.direction.y + 25;
+                    }
+                    break;
             }
         });
 
-        let isRocketShoot = false;
         window.addEventListener('keyup', function (event) {
             if (event.keyCode === 38 || event.keyCode === 40) {
                 planeSprite.spritesheet = playerStraight;
                 //normalize plane position image
             }
-            if (event.keyCode === 32) {
-                //shoot
-                isRocketShoot = true;
-                rocket.coordinates.x = plane.direction.x + 60;
-                rocket.coordinates.y = plane.direction.y + 25;
-            }
         });
+
 
         let rocketsDepot = [];
 
@@ -127,6 +131,18 @@ window.addEventListener('load', function () {
                 let lastRocketCoordinates = rocket.move('right');
                 rocketSprite.render(rocket.coordinates, lastRocketCoordinates);
                 rocketsDepot.push(rocket);
+                if (rocket.coordinates.x < WIDTH - enemy.width) {
+                    isButtonFree = false;
+                }
+                else {
+                    isButtonFree = true;
+                }
+            }
+            else {
+                if ((rocket.coordinates.x > WIDTH - enemy.width) || isEnemyKilled) {
+                    isButtonFree = true;
+                    isEnemyKilled = false; //prevent dirty rectangle
+                }
             }
 
             //ENEMY//
@@ -140,7 +156,7 @@ window.addEventListener('load', function () {
                     playerContext.drawImage(document.getElementById('game-over'), 0, 0);
                     return;
                 }
-                
+
                 if (isRocketShoot) {
                     for (let j = 0; j < rocketsDepot.length; j += 1) {
                         let rocketUnit = rocketsDepot[j];
@@ -161,6 +177,7 @@ window.addEventListener('load', function () {
 
                             rocketsDepot.length = 0; //clear rocket depot
                             isRocketShoot = false;
+                            isEnemyKilled = true;
                             break;
                         }
                     }
@@ -178,6 +195,7 @@ window.addEventListener('load', function () {
             background.update();
             window.requestAnimationFrame(gameLoop);
         }
+
         gameLoop();
     }
 );
