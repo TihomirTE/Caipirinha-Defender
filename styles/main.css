@@ -1,8 +1,3 @@
-/* For FULL SCREEN add to classes:
-width: 100%;
-height: 100%;
-*/
-
 body, html {
     width: 100%;
     height: 100%;
@@ -13,6 +8,8 @@ body, html {
 
 canvas {
     position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .sprites {
@@ -20,25 +17,17 @@ canvas {
 }
 
 #player-canvas {
-    width: 100%;
-    height: 100%;
     z-index: 10
 }
 
 #enemy-canvas {
-    width: 100%;
-    height: 100%;
     z-index: 5
 }
 
 #rocket-canvas {
-    width: 100%;
-    height: 100%;
     z-index: 3
 }
 
 #background-canvas {
-    width: 100%;
-    height: 100%;
     z-index: 1;
 }
