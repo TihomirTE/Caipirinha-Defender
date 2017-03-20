@@ -4,6 +4,8 @@ window.addEventListener('load', function() {
     const WIDTH = 1024;
     const HEIGHT = 600;
 
+    let isMovingForward = true;
+
     //PLAYER//
     let playerCanvas = document.getElementById('player-canvas');
     let playerContext = playerCanvas.getContext('2d');
@@ -11,9 +13,12 @@ window.addEventListener('load', function() {
     playerCanvas.width = WIDTH;
     playerCanvas.height = HEIGHT;
 
-    let playerStraight = document.getElementById('plane-spriteStraight');
-    let playerLeft = document.getElementById('plane-spriteLeft');
-    let playerRight = document.getElementById('plane-spriteRight');
+    let playerStraight = document.getElementById('plane-spriteStraight'),
+        playerLeft = document.getElementById('plane-spriteLeft'),
+        playerRight = document.getElementById('plane-spriteRight'),
+        playerBackward = document.getElementById('plane-spriteBackward'),
+        playerLeftBackward = document.getElementById('plane-spriteLeftBackward'),
+        playerRigthBackward = document.getElementById('plane-spriteRigthBackward');
 
     let planeSprite = createSprite({
         spritesheet: playerStraight,
@@ -82,54 +87,79 @@ window.addEventListener('load', function() {
         speed: 7
     });
 
-    let isRocketShoot = false;
-    let isButtonFree = true;
-    let isEnemyKilled = false;
+    let isRocketShoot = false,
+        isButtonFree = true,
+        isEnemyKilled = false;
+
     window.addEventListener('keydown', function(event) {
-        switch (event.keyCode) {
-            // backward
-            case 37:
-                if (plane.direction.x > 0) {
-                    plane.direction.x -= plane.speed;
-                    planeSprite.spritesheet = playerStraight;
-                }
-                break;
-                //up
-            case 38:
-                if (plane.direction.y > 0) {
-                    plane.direction.y -= plane.speed;
-                    planeSprite.spritesheet = playerLeft;
-                }
-                break;
-                // forward
-            case 39:
-                if (plane.direction.x < WIDTH - planeSprite.width) {
-                    plane.direction.x += plane.speed;
-                    planeSprite.spritesheet = playerStraight;
-                }
-                break;
-                //down
-            case 40:
-                if (plane.direction.y < HEIGHT - planeSprite.height) {
-                    plane.direction.y += plane.speed;
-                    planeSprite.spritesheet = playerRight;
-                }
-                break;
-                //shoot
-            case 32:
-                if (isButtonFree) {
-                    isRocketShoot = true;
-                    rocket.coordinates.x = plane.direction.x + 60;
-                    rocket.coordinates.y = plane.direction.y + 25;
-                }
-                break;
+        let pressedButton = event.keyCode;
+
+        // forward
+        if (pressedButton === 39) {
+            if (plane.direction.x < WIDTH - planeSprite.width) {
+                plane.direction.x += plane.speed;
+                planeSprite.spritesheet = playerStraight;
+            }
+            isMovingForward = true;
+        }
+        // forward left
+        if (pressedButton === 38 && isMovingForward) {
+            if (plane.direction.y > 0) {
+                plane.direction.y -= plane.speed;
+                planeSprite.spritesheet = playerLeft;
+            }
+        }
+        // forward rigth
+        if (pressedButton === 40) {
+            if (plane.direction.y < HEIGHT - planeSprite.height) {
+                plane.direction.y += plane.speed;
+                planeSprite.spritesheet = playerRight;
+            }
+        }
+
+        // backward
+        if (pressedButton === 37) {
+            if (plane.direction.x > 0) {
+                plane.direction.x -= plane.speed;
+                planeSprite.spritesheet = playerBackward;
+            }
+            isMovingForward = false;
+        }
+        // backward left
+        if (pressedButton === 40 && !isMovingForward) {
+            if (plane.direction.y < HEIGHT - planeSprite.height) {
+                plane.direction.y += plane.speed;
+                planeSprite.spritesheet = playerLeftBackward;
+            }
+        }
+        // backward rigth
+        if (pressedButton === 38 && !isMovingForward) {
+            if (plane.direction.y > 0) {
+                plane.direction.y -= plane.speed;
+                planeSprite.spritesheet = playerRigthBackward;
+            }
+        }
+
+        //shoot
+        if (pressedButton === 32) {
+            if (isButtonFree) {
+                isRocketShoot = true;
+                rocket.coordinates.x = plane.direction.x + 60;
+                rocket.coordinates.y = plane.direction.y + 25;
+            }
         }
     });
 
     window.addEventListener('keyup', function(event) {
-        if (event.keyCode === 38 || event.keyCode === 40) {
-            planeSprite.spritesheet = playerStraight;
-            //normalize plane position image
+        let upButton = event.keyCode;
+
+        //normalize plane position image
+        if (upButton === 38 || upButton === 40) {
+            if (isMovingForward) {
+                planeSprite.spritesheet = playerStraight;
+            } else {
+                planeSprite.spritesheet = playerBackward;
+            }
         }
     });
 
@@ -144,7 +174,15 @@ window.addEventListener('load', function() {
 
         //ROCKETS//
         if (isRocketShoot) {
-            let lastRocketCoordinates = rocket.move('right');
+            let lastRocketCoordinates;
+            if (isMovingForward) {
+                // shooting forward
+                lastRocketCoordinates = rocket.move('right');
+            } else {
+                // shooting backward
+                lastRocketCoordinates = rocket.move('left');
+            }
+
             rocketSprite.render(rocket.coordinates, lastRocketCoordinates);
             rocketsDepot.push(rocket);
             if (rocket.coordinates.x < WIDTH - enemy.width) {
@@ -212,7 +250,7 @@ window.addEventListener('load', function() {
 
     function collidesWith(plane, enemyUnit) {
 
-        var minDistanceX = plane.width / 2 + enemyUnit.width / 2,
+        let minDistanceX = plane.width / 2 + enemyUnit.width / 2,
             minDistanceY = plane.height / 2 + enemyUnit.height / 2,
 
             actualDistanceX = Math.abs(plane.coordinates.x - enemyUnit.coordinates.x),
