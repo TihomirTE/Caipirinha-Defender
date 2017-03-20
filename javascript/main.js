@@ -166,7 +166,7 @@ window.addEventListener('load', function() {
             enemiesArmy.sprite.render(enemyUnit.coordinates, lastEnemyCoordinates);
 
             //collide (game over)
-            if (plane.direction.x >= (enemyUnit.coordinates.x - (plane.width / 2))) {
+            if (collidesWith(plane, enemyUnit) || (enemyUnit.coordinates.x < 0)) {
                 playerContext.drawImage(document.getElementById('game-over'), 0, 0);
                 return;
             }
@@ -208,6 +208,17 @@ window.addEventListener('load', function() {
         background.render();
         background.update();
         window.requestAnimationFrame(gameLoop);
+    }
+
+    function collidesWith(plane, enemyUnit) {
+
+        var minDistanceX = plane.width / 2 + enemyUnit.width / 2,
+            minDistanceY = plane.height / 2 + enemyUnit.height / 2,
+
+            actualDistanceX = Math.abs(plane.coordinates.x - enemyUnit.coordinates.x),
+            actualDistanceY = Math.abs(plane.coordinates.y - enemyUnit.coordinates.y);
+
+        return ((minDistanceX >= actualDistanceX) && (minDistanceY >= actualDistanceY));
     }
 
     gameLoop();
