@@ -1,4 +1,4 @@
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     "use strict";
 
     const WIDTH = 1024;
@@ -18,7 +18,8 @@ window.addEventListener('load', function() {
         playerRight = document.getElementById('plane-spriteRight'),
         playerBackward = document.getElementById('plane-spriteBackward'),
         playerLeftBackward = document.getElementById('plane-spriteLeftBackward'),
-        playerRigthBackward = document.getElementById('plane-spriteRigthBackward');
+        playerRigthBackward = document.getElementById('plane-spriteRigthBackward'),
+        playerCollision = document.getElementById('plane-collision');
 
     let planeSprite = createSprite({
         spritesheet: playerStraight,
@@ -91,7 +92,7 @@ window.addEventListener('load', function() {
         isButtonFree = true,
         isEnemyKilled = false;
 
-    window.addEventListener('keydown', function(event) {
+    window.addEventListener('keydown', function (event) {
         let pressedButton = event.keyCode;
 
         // forward
@@ -150,7 +151,7 @@ window.addEventListener('load', function() {
         }
     });
 
-    window.addEventListener('keyup', function(event) {
+    window.addEventListener('keyup', function (event) {
         let upButton = event.keyCode;
 
         //normalize plane position image
@@ -205,7 +206,13 @@ window.addEventListener('load', function() {
 
             //collide (game over)
             if (collidesWith(plane, enemyUnit) || (enemyUnit.coordinates.x < 0)) {
-                playerContext.drawImage(document.getElementById('game-over'), 0, 0);
+                playerContext.drawImage(document.getElementById('plane-collision'),
+                    plane.coordinates.x, plane.coordinates.y);
+
+                setTimeout(function () {
+                    playerContext.drawImage(document.getElementById('game-over'), 0, 0);
+                }, 1500);
+
                 return;
             }
 
