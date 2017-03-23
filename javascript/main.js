@@ -103,6 +103,10 @@ window.addEventListener('load', function () {
         height: cannonImage.width,
         framesNumber: 1
     });
+    //will be removed - used temporarily for marking position//
+    let cannonImageTwo = document.getElementById('cannon-sprite-2');
+    let cannonImageThree = document.getElementById('cannon-sprite-3');
+
 
 
     let isRocketShoot = false,
@@ -191,7 +195,10 @@ window.addEventListener('load', function () {
         planeSprite.render(plane.coordinates, lastPlaneCoordinates);
 
         //CANNON
+        //will be removed - used temporarily for marking position//
         cannonContext.drawImage(cannonImage, 900, 520);
+        cannonContext.drawImage(cannonImageTwo, 600, 520);
+        cannonContext.drawImage(cannonImageThree, 300, 520);
         //ROCKETS//
         if (isRocketShoot) {
             let lastRocketCoordinates;
