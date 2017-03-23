@@ -88,6 +88,23 @@ window.addEventListener('load', function () {
         speed: 7
     });
 
+    //CANNON//
+    let cannonCanvas = document.getElementById('cannon-canvas');
+    let cannonContext = cannonCanvas.getContext('2d');
+
+    cannonCanvas.width = WIDTH;
+    cannonCanvas.height = HEIGHT;
+
+    let cannonImage = document.getElementById('cannon-sprite-1');
+    let cannon = createSprite({
+        spritesheet: cannonImage,
+        context: cannonContext,
+        width: cannonImage.height,
+        height: cannonImage.width,
+        framesNumber: 1
+    });
+
+
     let isRocketShoot = false,
         isButtonFree = true,
         isEnemyKilled = false;
@@ -133,7 +150,7 @@ window.addEventListener('load', function () {
                 planeSprite.spritesheet = playerLeftBackward;
             }
         }
-        // backward rigth
+        // backward right
         if (pressedButton === 38 && !isMovingForward) {
             if (plane.direction.y > 0) {
                 plane.direction.y -= plane.speed;
@@ -173,6 +190,8 @@ window.addEventListener('load', function () {
         let lastPlaneCoordinates = playerMove(plane);
         planeSprite.render(plane.coordinates, lastPlaneCoordinates);
 
+        //CANNON
+        cannonContext.drawImage(cannonImage, 900, 520);
         //ROCKETS//
         if (isRocketShoot) {
             let lastRocketCoordinates;

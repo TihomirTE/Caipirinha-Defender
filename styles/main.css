@@ -31,3 +31,6 @@ canvas {
 #background-canvas {
     z-index: 1;
 }
+#cannon-canvas {
+    z-index: 5;
+}
