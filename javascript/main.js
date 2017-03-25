@@ -68,8 +68,26 @@ window.addEventListener('load', function () {
         coordinates: { x: plane.direction.x + 10, y: plane.direction.y + 25 }, // start position
         height: rocketSprite.height,
         width: rocketSprite.width,
-        speed: 50
+        speed: 60
     });
+
+
+    let startShoting = true;
+    let isRocketShoot = false;
+    //autoshoot
+    if (startShoting) {
+        window.setInterval(function () {
+            isRocketShoot = true;
+            rocket.coordinates.x = plane.direction.x + 60;
+            rocket.coordinates.y = plane.direction.y + 25;
+        },
+            //time between shots
+            440);
+        startShoting = false;
+    }
+
+
+    let rocketsDepot = [];
 
     //ENEMY//
     let enemyCanvas = document.getElementById('enemy-canvas');
@@ -79,14 +97,39 @@ window.addEventListener('load', function () {
     enemyCanvas.height = HEIGHT;
 
     let enemy = document.getElementById('enemy-sprite-1');
-    let enemiesArmy = spawnEnemies(enemy, enemyContext, 1, WIDTH); //enemies speed
+    let enemiesArmy = spawnEnemies(enemy, enemyContext, 1.5, WIDTH); //enemies speed
 
-    //BACKGROUND//
-    let background = createBackground({
-        width: WIDTH,
-        height: HEIGHT,
-        speed: 7
+
+    //LVL1BOSS
+
+    let bossCanvas = document.getElementById('enemy-canvas');
+    let bossContext = bossCanvas.getContext('2d');
+
+    bossCanvas.width = WIDTH;
+    bossCanvas.height = HEIGHT;
+
+    let boss = document.getElementById('enemy-sprite-3');
+    let bossArmy = spawnLevelOneBoss(boss, bossContext, 0.8, WIDTH);
+
+
+    //BOSSSHOTS
+    let cannonballCanvas = document.getElementById('ball-canvas');
+    let cannonballContext = playerCanvas.getContext('2d');
+
+    cannonballCanvas.width = WIDTH;
+    cannonballCanvas.height = HEIGHT;
+
+    let cannonballImg = document.getElementById('enemy-fire');
+
+    let cannonballSprite = createSprite({
+        spritesheet: cannonballImg,
+        context: cannonballContext,
+        width: cannonballImg.width,
+        height: cannonballImg.height,
+        framesNumber: 1
     });
+
+
 
     //CANNON//
     let cannonCanvas = document.getElementById('cannon-canvas');
@@ -107,10 +150,16 @@ window.addEventListener('load', function () {
     let cannonImageTwo = document.getElementById('cannon-sprite-2');
     let cannonImageThree = document.getElementById('cannon-sprite-3');
 
+    //BACKGROUND//
+
+    let background = createBackground({
+        width: WIDTH,
+        height: HEIGHT,
+        speed: 7
+    });
 
 
-    let isRocketShoot = false,
-        isButtonFree = true,
+    let isButtonFree = true,
         isEnemyKilled = false;
 
     window.addEventListener('keydown', function (event) {
@@ -118,7 +167,7 @@ window.addEventListener('load', function () {
 
         // forward
         if (pressedButton === 39) {
-            if (plane.direction.x < WIDTH - planeSprite.width) {
+            if (plane.direction.x < WIDTH / 2 - planeSprite.width) {
                 plane.direction.x += plane.speed;
                 planeSprite.spritesheet = playerStraight;
             }
@@ -154,7 +203,7 @@ window.addEventListener('load', function () {
                 planeSprite.spritesheet = playerLeftBackward;
             }
         }
-        // backward right
+        // backward rigth
         if (pressedButton === 38 && !isMovingForward) {
             if (plane.direction.y > 0) {
                 plane.direction.y -= plane.speed;
@@ -162,14 +211,6 @@ window.addEventListener('load', function () {
             }
         }
 
-        //shoot
-        if (pressedButton === 32) {
-            if (isButtonFree) {
-                isRocketShoot = true;
-                rocket.coordinates.x = plane.direction.x + 60;
-                rocket.coordinates.y = plane.direction.y + 25;
-            }
-        }
     });
 
     window.addEventListener('keyup', function (event) {
@@ -186,19 +227,18 @@ window.addEventListener('load', function () {
     });
 
 
-    let rocketsDepot = [];
-
     //execute moving operations (rendering)
     function gameLoop() {
         //PLAYER//
         let lastPlaneCoordinates = playerMove(plane);
         planeSprite.render(plane.coordinates, lastPlaneCoordinates);
 
-        //CANNON
+         //CANNON
         //will be removed - used temporarily for marking position//
         cannonContext.drawImage(cannonImage, 900, 520);
         cannonContext.drawImage(cannonImageTwo, 600, 520);
         cannonContext.drawImage(cannonImageThree, 300, 520);
+
         //ROCKETS//
         if (isRocketShoot) {
             let lastRocketCoordinates;
@@ -237,20 +277,26 @@ window.addEventListener('load', function () {
 
                 setTimeout(function () {
                     playerContext.drawImage(document.getElementById('game-over'), 0, 0);
-                }, 1500);
+                }, 1000);
 
                 return;
             }
-
             if (isRocketShoot) {
                 for (let j = 0; j < rocketsDepot.length; j += 1) {
                     let rocketUnit = rocketsDepot[j];
+                    //if rocket is out of bounds delete it
+                    if (rocketUnit.coordinates.x >= (WIDTH - 40) || rocketUnit.coordinates.x <= 25) {
+                        rocketContext.clearRect(rocketUnit.coordinates.x, rocketUnit.coordinates.y,
+                            rocketUnit.width, rocketUnit.height); //clear rocket if out of range
+                        rocketsDepot.length = 0;
+                        isRocketShoot = false;
+                    }
 
                     //shoot (kill enemy)
-                    if (rocketUnit.coordinates.x >= (enemyUnit.coordinates.x - enemyUnit.width / 2) &&
-                        rocketUnit.coordinates.x <= (enemyUnit.coordinates.x + enemyUnit.width / 2) &&
-                        rocketUnit.coordinates.y >= (enemyUnit.coordinates.y - enemyUnit.height / 2) &&
-                        rocketUnit.coordinates.y <= (enemyUnit.coordinates.y + enemyUnit.height / 2)) {
+                    if (rocketUnit.coordinates.x >= (enemyUnit.coordinates.x - enemyUnit.width / 1.4) &&
+                        rocketUnit.coordinates.x <= (enemyUnit.coordinates.x + enemyUnit.width / 1.4) &&
+                        rocketUnit.coordinates.y >= (enemyUnit.coordinates.y - enemyUnit.height / 1.4) &&
+                        rocketUnit.coordinates.y <= (enemyUnit.coordinates.y + enemyUnit.height / 1.4)) {
 
                         enemiesArmy.movable.splice(i, 1); //delete enemy from the army
 
@@ -269,8 +315,60 @@ window.addEventListener('load', function () {
             }
         }
 
-        //game winning
+
+
+        //Boss lvl 1
         if (enemiesArmy.movable.length === 0) {
+
+
+            for (let i = 0; i < bossArmy.movable.length; i += 1) {
+                let bossUnit = bossArmy.movable[i];
+                let lastEnemyCoordinates;
+                lastEnemyCoordinates = bossUnit.move('left', (WIDTH - (WIDTH / 3)));      //moves in about 1/3 in and stops 
+                bossArmy.sprite.render(bossUnit.coordinates, lastEnemyCoordinates)
+
+
+                if (isRocketShoot) {
+                    for (let j = 0; j < rocketsDepot.length; j += 1) {
+                        let rocketUnit = rocketsDepot[j];
+                        //if rocket is out of bounds delete it
+                        if (rocketUnit.coordinates.x >= (WIDTH - 40) || rocketUnit.coordinates.x <= 25) {
+                            rocketContext.clearRect(rocketUnit.coordinates.x, rocketUnit.coordinates.y,
+                                rocketUnit.width, rocketUnit.height); //clear rocket if out of range
+                            rocketsDepot.length = 0;
+                            isRocketShoot = false;
+                        }
+
+                        //shoot (kill enemy)
+                        if (rocketUnit.coordinates.x >= (bossUnit.coordinates.x - bossUnit.width / 1.4) &&
+                            rocketUnit.coordinates.x <= (bossUnit.coordinates.x + bossUnit.width / 1.4) &&
+                            rocketUnit.coordinates.y >= (bossUnit.coordinates.y - bossUnit.height / 1.4) &&
+                            rocketUnit.coordinates.y <= (bossUnit.coordinates.y + bossUnit.height / 1.4)) {
+                            bossUnit.health -= 1;
+                            if (bossUnit.health < 1) {
+                                bossArmy.movable.splice(i, 1); //delete enemy from the army
+
+                                bossContext.clearRect(bossUnit.coordinates.x, bossUnit.coordinates.y,
+                                    bossUnit.width, bossUnit.height); //clear enemy
+                            }
+                            rocketContext.clearRect(rocketUnit.coordinates.x, rocketUnit.coordinates.y,
+                                rocketUnit.width, rocketUnit.height); //clear rocket
+
+
+
+                            rocketsDepot.length = 0; //clear rocket depot
+                            isRocketShoot = false;
+                            isEnemyKilled = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        //game winning
+        if (bossArmy.movable.length === 0) {
             playerContext.drawImage(document.getElementById('game-win'), 0, 0);
             return;
         }
@@ -291,6 +389,7 @@ window.addEventListener('load', function () {
 
         return ((minDistanceX >= actualDistanceX) && (minDistanceY >= actualDistanceY));
     }
+
 
     gameLoop();
 });

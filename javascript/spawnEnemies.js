@@ -1,11 +1,9 @@
 function spawnEnemies(enemy, enemyContext, speed, WIDTH) {
     "use strict";
 
-    const ENEMIES_COLS = 3;
-    const ENEMIES_ROWS = 5;
+    const ENEMIES_COLS = 8;
 
-    const distanceBetweenEnemiesInRow = 30;
-    const distanceBetweenEnemiesInCol = 10;
+    const distanceBetweenEnemiesInCol = 200;
 
 
     let enemySprite = createSprite({
@@ -20,12 +18,33 @@ function spawnEnemies(enemy, enemyContext, speed, WIDTH) {
 
     let unitPositionCol = 0;
     for (let i = 0; i < ENEMIES_COLS; i += 1) {
-        let unitPositionRow = 100;
-        for (let j = 0; j < ENEMIES_ROWS; j += 1) {
+        let unitPositionRow;
+        let takenPositions=[];
+        let numberOfEnemiesIncoll = Math.floor(Math.random() * (4 - 2 + 1) + 2)
+        for (let j = 0; j < numberOfEnemiesIncoll; j += 1) {
 
-
+            let randomPosition = Math.floor(Math.random() * (4 - 1 + 1) + 1);
+            
+            while(takenPositions.indexOf(randomPosition)!==-1){
+                randomPosition = Math.floor(Math.random() * (4 - 1 + 1) + 1);
+            }
+            switch (randomPosition){
+                case 1:
+                unitPositionRow=100;
+                break;
+                case 2:
+                unitPositionRow=225;
+                break;
+                case 3:
+                unitPositionRow=350;
+                break;
+                default:
+                unitPositionRow=475;
+                break;
+            }
+            takenPositions.push(randomPosition);
             let enemyPlane = createMovableElements({
-                coordinates: {x: WIDTH + unitPositionCol, y: unitPositionRow},
+                coordinates: { x: WIDTH + unitPositionCol, y: unitPositionRow },
                 width: enemySprite.width,
                 height: enemySprite.height,
                 speed: speed
@@ -33,7 +52,6 @@ function spawnEnemies(enemy, enemyContext, speed, WIDTH) {
 
             enemiesMovable.push(enemyPlane);
 
-            unitPositionRow += (enemy.width + distanceBetweenEnemiesInRow);
         }
         unitPositionCol += (enemy.height + distanceBetweenEnemiesInCol);
     }
