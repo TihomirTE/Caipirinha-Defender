@@ -1,5 +1,4 @@
-window.addEventListener('load', function() {
-
+function startGame(){
     "use strict";
 
     const WIDTH = 1024;
@@ -471,4 +470,4 @@ window.addEventListener('load', function() {
 
         gameLoop();
     }
-});
+}
