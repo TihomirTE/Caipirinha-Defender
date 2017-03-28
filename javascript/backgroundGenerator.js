@@ -4,7 +4,8 @@ function createBackground(options) {
     let backgroundCanvas = document.getElementById('background-canvas');
     let context = backgroundCanvas.getContext('2d');
     let backgroundImage = document.getElementById('background-1');
-
+    let test = 3;
+    
     backgroundCanvas.height = options.height;
     backgroundCanvas.width = options.width;
 
