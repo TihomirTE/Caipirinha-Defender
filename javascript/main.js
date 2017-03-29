@@ -25,12 +25,12 @@ function startGame() {
             xLeft: options.xLeft,
             xRight: options.xRight,
             yUp: options.yUp,
-            yDown: options.yDown,
+            yDown: options.yDown
 
         }
-    };
+    }
 
-    let button = createButton({ xLeft: 560, yUp: 270 });
+    let button = createButton({xLeft: 560, yUp: 270});
     button.xRight = button.xLeft + playImage.width;
     button.yDown = button.yUp + playImage.height;
 
@@ -65,7 +65,8 @@ function startGame() {
     let mouseX, mouseY;
 
     function checkClicked(button) {
-        if (button.xLeft <= mouseX && mouseX <= button.xRight && button.yUp <= mouseY && mouseY <= button.yDown) {
+        if (button.xLeft <= mouseX && mouseX <= button.xRight &&
+            button.yUp <= mouseY && mouseY <= button.yDown) {
             return true;
         }
         return false;
@@ -109,7 +110,7 @@ function startGame() {
         });
 
         let plane = createMovableElements({
-            direction: { x: 10, y: (HEIGHT / 2) - planeSprite.height }, // start position
+            direction: {x: 10, y: (HEIGHT / 2) - planeSprite.height}, // start position
             height: planeSprite.height,
             width: planeSprite.width,
             speed: 30
@@ -117,7 +118,7 @@ function startGame() {
 
         function playerMove(player) {
             //moves all directions
-            let previousPosition = { x: player.coordinates.x, y: player.coordinates.y };
+            let previousPosition = {x: player.coordinates.x, y: player.coordinates.y};
             //clear previous position in y coordinates
             player.coordinates.y = player.direction.y;
             //clear previous position in x coordinates
@@ -133,18 +134,20 @@ function startGame() {
         rocketCanvas.width = WIDTH;
         rocketCanvas.height = HEIGHT;
 
-        let rocketImg = document.getElementById('rocket');
+        let rocketImgForward = document.getElementById('rocketForward');
+        let rocketImgBackward = document.getElementById('rocketBackward');
+
 
         let rocketSprite = createSprite({
-            spritesheet: rocketImg,
+            spritesheet: rocketImgForward,
             context: rocketContext,
-            width: rocketImg.width,
-            height: rocketImg.height,
+            width: rocketImgForward.width,
+            height: rocketImgForward.height,
             framesNumber: 1
         });
 
         let rocket = createMovableElements({
-            coordinates: { x: plane.direction.x + 10, y: plane.direction.y + 25 }, // start position
+            coordinates: {x: plane.direction.x + 10, y: plane.direction.y + 25}, // start position
             height: rocketSprite.height,
             width: rocketSprite.width,
             speed: 60
@@ -153,15 +156,17 @@ function startGame() {
 
         let startShoting = true;
         let isRocketShoot = false;
+
+
         //autoshoot
         if (startShoting) {
             window.setInterval(function () {
-                isRocketShoot = true;
-                rocket.coordinates.x = plane.direction.x + 60;
-                rocket.coordinates.y = plane.direction.y + 25;
-            },
+                    isRocketShoot = true;
+                    rocket.coordinates.x = plane.direction.x + 60;
+                    rocket.coordinates.y = plane.direction.y + 25;
+                },
                 //time between shots
-                440);
+                1000);
             startShoting = false;
         }
 
@@ -209,7 +214,6 @@ function startGame() {
         });
 
 
-
         //CANNON//
         let cannonCanvas = document.getElementById('cannon-canvas');
         let cannonContext = cannonCanvas.getContext('2d');
@@ -244,7 +248,7 @@ function startGame() {
         });
 
         let ball = createMovableElements({
-            coordinates: { x: cannon.x + -10, y: cannon.y + -25 }, // start position
+            coordinates: {x: cannon.x + -10, y: cannon.y + -25}, // start position
             height: ballSprite.height,
             width: ballSprite.width,
             speed: 60
@@ -256,10 +260,10 @@ function startGame() {
         //autoshoot
         if (startShoting) {
             window.setInterval(function () {
-                isBallShoot = true;
-                ball.coordinates.x = cannon.x + 60;
-                ball.coordinates.y = cannon.y + 25;
-            },
+                    isBallShoot = true;
+                    ball.coordinates.x = cannon.x + 60;
+                    ball.coordinates.y = cannon.y + 25;
+                },
                 //time between shots
                 300);
             startShoting = false;
@@ -292,6 +296,7 @@ function startGame() {
                 if (plane.direction.x < WIDTH / 2 - planeSprite.width) {
                     plane.direction.x += plane.speed;
                     planeSprite.spritesheet = playerStraight;
+                    rocketSprite.spritesheet = rocketImgForward;
                 }
                 isMovingForward = true;
             }
@@ -300,6 +305,7 @@ function startGame() {
                 if (plane.direction.y > 0) {
                     plane.direction.y -= plane.speed;
                     planeSprite.spritesheet = playerLeft;
+                    rocketSprite.spritesheet = rocketImgForward;
                 }
             }
             // forward rigth
@@ -307,6 +313,7 @@ function startGame() {
                 if (plane.direction.y < HEIGHT - planeSprite.height) {
                     plane.direction.y += plane.speed;
                     planeSprite.spritesheet = playerRight;
+                    rocketSprite.spritesheet = rocketImgForward;
                 }
             }
 
@@ -315,6 +322,7 @@ function startGame() {
                 if (plane.direction.x > 0) {
                     plane.direction.x -= plane.speed;
                     planeSprite.spritesheet = playerBackward;
+                    rocketSprite.spritesheet = rocketImgBackward;
                 }
                 isMovingForward = false;
             }
@@ -323,6 +331,7 @@ function startGame() {
                 if (plane.direction.y < HEIGHT - planeSprite.height) {
                     plane.direction.y += plane.speed;
                     planeSprite.spritesheet = playerLeftBackward;
+                    rocketSprite.spritesheet = rocketImgBackward;
                 }
             }
             // backward rigth
@@ -330,6 +339,7 @@ function startGame() {
                 if (plane.direction.y > 0) {
                     plane.direction.y -= plane.speed;
                     planeSprite.spritesheet = playerRigthBackward;
+                    rocketSprite.spritesheet = rocketImgBackward;
                 }
             }
 
@@ -438,7 +448,6 @@ function startGame() {
             }
 
 
-
             //Boss lvl 1
             if (enemiesArmy.movable.length === 0) {
 
@@ -447,7 +456,7 @@ function startGame() {
                     let bossUnit = bossArmy.movable[i];
                     let lastEnemyCoordinates;
                     lastEnemyCoordinates = bossUnit.move('left', (WIDTH - (WIDTH / 3))); //moves in about 1/3 in and stops 
-                    bossArmy.sprite.render(bossUnit.coordinates, lastEnemyCoordinates)
+                    bossArmy.sprite.render(bossUnit.coordinates, lastEnemyCoordinates);
 
 
                     if (isRocketShoot) {
@@ -475,7 +484,6 @@ function startGame() {
                                 }
                                 rocketContext.clearRect(rocketUnit.coordinates.x, rocketUnit.coordinates.y,
                                     rocketUnit.width, rocketUnit.height); //clear rocket
-
 
 
                                 rocketsDepot.length = 0; //clear rocket depot
