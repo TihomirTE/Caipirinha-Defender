@@ -1,7 +1,7 @@
 function spawnEnemies(enemy, enemyContext, speed, WIDTH) {
     "use strict";
 
-    const ENEMIES_COLS = 8;
+    const ENEMIES_COLS = 3;
 
     const distanceBetweenEnemiesInCol = 200;
 
