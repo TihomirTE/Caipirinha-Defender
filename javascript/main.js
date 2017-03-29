@@ -40,7 +40,7 @@ function startGame() {
         }
     }
 
-    let button = createButton({ xLeft: 560, yUp: 270 });
+    let button = createButton({ xLeft: 0, yUp: 0 });
     button.xRight = window.innerWidth;
     button.yDown = window.innerHeight;
 
