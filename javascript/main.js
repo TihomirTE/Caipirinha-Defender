@@ -41,8 +41,8 @@ function startGame() {
     }
 
     let button = createButton({ xLeft: 560, yUp: 270 });
-    button.xRight = button.xLeft + playImage.width;
-    button.yDown = button.yUp + playImage.height;
+    button.xRight = window.innerWidth;
+    button.yDown = window.innerHeight;
 
     let frames = 30;
     let timerId = 0;
@@ -86,14 +86,14 @@ function startGame() {
         mouseX = event.pageX - menuCanvas.offsetLeft;
         mouseY = event.pageY - menuCanvas.offsetTop;
         if (checkClicked(button)) {
-            startGame();
+            startGameLoop();
             document.removeEventListener('click', mouseClicked);
         }
     }
 
     document.addEventListener('click', mouseClicked);
 
-    function startGame() {
+    function startGameLoop() {
         let isMovingForward = true;
 
         //PLAYER//
@@ -180,9 +180,6 @@ function startGame() {
             startShoting = false;
         }
 
-
-        let rocketsDepot = [];
-
         //ENEMY//
         let enemyCanvas = document.getElementById('enemy-canvas');
         let enemyContext = enemyCanvas.getContext('2d');
@@ -191,7 +188,8 @@ function startGame() {
         enemyCanvas.height = HEIGHT;
 
         let enemy = document.getElementById('enemy-sprite-1');
-        let enemiesArmy = spawnEnemies(enemy, enemyContext, 1.5, WIDTH); //enemies speed
+        let enemiesSpeed = 1;
+        let enemiesArmy = spawnEnemies(enemy, enemyContext, enemiesSpeed, WIDTH); //enemies speed
 
 
         //LVL1BOSS
@@ -368,6 +366,8 @@ function startGame() {
             }
         });
 
+        let levelNumber = 1;
+        let rocketsDepot = [];
 
         //execute moving operations (rendering)
         function gameLoop() {
@@ -554,7 +554,9 @@ function startGame() {
 
 
             //game winning
-            if (bossArmy.movable.length === 0) {
+            if (bossArmy.movable.length === 0 && enemiesArmy.movable.length === 0) {
+                if (levelNumber === 5){
+                    //END GAME
                 playerContext.drawImage(document.getElementById('game-win'), 0, 0);
 
                 var input = new CanvasInput({
@@ -592,8 +594,17 @@ function startGame() {
                     }
                 });
                 return;
-            }
+                } else {
+                    levelNumber += 1;
+                    enemiesSpeed += 0.1;
+                    rocket.speed += 0.5;
+                    plane.speed += 2;
 
+                    enemy = document.getElementById(`enemy-sprite-${levelNumber}`);
+                    background.image = document.getElementById(`background-${levelNumber}`);
+                    enemiesArmy = spawnEnemies(enemy, enemyContext, enemiesSpeed, WIDTH);
+                }
+            }
             //BACKGROUND//
             background.render();
             background.update();
