@@ -1,4 +1,6 @@
-function startGame(){
+//esversion: 6
+
+function startGame() {
     "use strict";
 
     const WIDTH = 1024;
@@ -153,11 +155,11 @@ function startGame(){
         let isRocketShoot = false;
         //autoshoot
         if (startShoting) {
-            window.setInterval(function() {
-                    isRocketShoot = true;
-                    rocket.coordinates.x = plane.direction.x + 60;
-                    rocket.coordinates.y = plane.direction.y + 25;
-                },
+            window.setInterval(function () {
+                isRocketShoot = true;
+                rocket.coordinates.x = plane.direction.x + 60;
+                rocket.coordinates.y = plane.direction.y + 25;
+            },
                 //time between shots
                 440);
             startShoting = false;
@@ -223,6 +225,49 @@ function startGame(){
             height: cannonImage.width,
             framesNumber: 1
         });
+
+        //CANNON-BALLS//
+        let ballCanvas = document.getElementById('ball-canvas');
+        let ballContext = cannonCanvas.getContext('2d');
+
+        ballCanvas.width = WIDTH;
+        ballCanvas.height = HEIGHT;
+
+        let ballImg = document.getElementById('enemy-fire');
+
+        let ballSprite = createSprite({
+            spritesheet: ballImg,
+            context: ballContext,
+            width: ballImg.width,
+            height: ballImg.height,
+            framesNumber: 1
+        });
+
+        let ball = createMovableElements({
+            coordinates: { x: cannon.x + -10, y: cannon.y + -25 }, // start position
+            height: ballSprite.height,
+            width: ballSprite.width,
+            speed: 60
+        });
+
+
+        let cannonShoting = true;
+        let isBallShoot = false;
+        //autoshoot
+        if (startShoting) {
+            window.setInterval(function () {
+                isBallShoot = true;
+                ball.coordinates.x = cannon.x + 60;
+                ball.coordinates.y = cannon.y + 25;
+            },
+                //time between shots
+                300);
+            startShoting = false;
+        }
+
+
+        let ballsDepot = [];
+
         //will be removed - used temporarily for marking position//
         let cannonImageTwo = document.getElementById('cannon-sprite-2');
         let cannonImageThree = document.getElementById('cannon-sprite-3');
@@ -239,7 +284,7 @@ function startGame(){
         let isButtonFree = true,
             isEnemyKilled = false;
 
-        window.addEventListener('keydown', function(event) {
+        window.addEventListener('keydown', function (event) {
             let pressedButton = event.keyCode;
 
             // forward
@@ -290,7 +335,7 @@ function startGame(){
 
         });
 
-        window.addEventListener('keyup', function(event) {
+        window.addEventListener('keyup', function (event) {
             let upButton = event.keyCode;
 
             //normalize plane position image
@@ -352,7 +397,7 @@ function startGame(){
                     playerContext.drawImage(document.getElementById('plane-collision'),
                         plane.coordinates.x, plane.coordinates.y);
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         playerContext.drawImage(document.getElementById('game-over'), 0, 0);
                     }, 1000);
 
