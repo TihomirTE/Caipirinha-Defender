@@ -427,7 +427,7 @@ function startGame() {
                             fontFamily: 'Arial',
                             fontColor: '#212121',
                             fontWeight: 'bold',
-                            width: 300,
+                            width: 200,
                             padding: 8,
                             borderWidth: 1,
                             borderColor: '#000',
@@ -448,7 +448,7 @@ function startGame() {
 
                                 playerContext.fillStyle = 'white';
                                 playerContext.font = '32pt Times New Roman serif';
-                                playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100 );
+                                playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100);
                                 playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
                                 playerContext.strokeText('Hit F5 to play again!', 500, 50);
 
@@ -475,9 +475,11 @@ function startGame() {
                             rocketUnit.coordinates.y >= (enemyUnit.coordinates.y - enemyUnit.height / 1.4) &&
                             rocketUnit.coordinates.y <= (enemyUnit.coordinates.y + enemyUnit.height / 1.4)) {
 
-                            document.getElementById('blast').play();
+                            let blastSound = document.getElementById('blast');
+                            blastSound.playbackRate = 3;
+                            blastSound.play();
                             enemiesArmy.movable.splice(i, 1); //delete enemy from the army
-                            scoreCounter += 1; 
+                            scoreCounter += 1;
 
                             rocketContext.clearRect(rocketUnit.coordinates.x, rocketUnit.coordinates.y,
                                 rocketUnit.width, rocketUnit.height); //clear rocket
@@ -522,9 +524,14 @@ function startGame() {
                                 rocketUnit.coordinates.x <= (bossUnit.coordinates.x + bossUnit.width / 1.4) &&
                                 rocketUnit.coordinates.y >= (bossUnit.coordinates.y - bossUnit.height / 1.4) &&
                                 rocketUnit.coordinates.y <= (bossUnit.coordinates.y + bossUnit.height / 1.4)) {
+
+                                let blastSound = document.getElementById('blast');
+                                blastSound.playbackRate = 3;
+                                blastSound.play();
                                 bossUnit.health -= 1;
+                                
                                 if (bossUnit.health < 1) {
-                                    document.getElementById('blast').play();
+
                                     bossArmy.movable.splice(i, 1); //delete enemy from the army
                                     scoreCounter += 5;
 
@@ -551,39 +558,39 @@ function startGame() {
                 playerContext.drawImage(document.getElementById('game-win'), 0, 0);
 
                 var input = new CanvasInput({
-                            canvas: document.getElementById('player-canvas'),
-                            fontSize: 18,
-                            fontFamily: 'Arial',
-                            fontColor: '#212121',
-                            fontWeight: 'bold',
-                            width: 300,
-                            padding: 8,
-                            borderWidth: 1,
-                            borderColor: '#000',
-                            borderRadius: 3,
-                            boxShadow: '1px 1px 0px #fff',
-                            innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-                            placeHolder: 'Enter nickname : '
-                        });
+                    canvas: document.getElementById('player-canvas'),
+                    fontSize: 18,
+                    fontFamily: 'Arial',
+                    fontColor: '#212121',
+                    fontWeight: 'bold',
+                    width: 200,
+                    padding: 8,
+                    borderWidth: 1,
+                    borderColor: '#000',
+                    borderRadius: 3,
+                    boxShadow: '1px 1px 0px #fff',
+                    innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+                    placeHolder: 'Enter nickname : '
+                });
 
-                        window.addEventListener('keydown', function (event) {
+                window.addEventListener('keydown', function (event) {
 
-                            let pressedButton = event.keyCode;
-                            if (pressedButton === 13) {
-                                playerData.nickname = input.value();
-                                playerData.score = scoreCounter;
+                    let pressedButton = event.keyCode;
+                    if (pressedButton === 13) {
+                        playerData.nickname = input.value();
+                        playerData.score = scoreCounter;
 
-                                highScores.push(playerData);
+                        highScores.push(playerData);
 
-                                playerContext.fillStyle = 'white';
-                                playerContext.strokeStyle = 'white';
-                                playerContext.font = '32pt Times New Roman serif';
-                                playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100 );
-                                playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
-                                playerContext.strokeText('Hit F5 to play again!', 500, 50);
+                        playerContext.fillStyle = 'white';
+                        playerContext.strokeStyle = 'white';
+                        playerContext.font = '32pt Times New Roman serif';
+                        playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100);
+                        playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
+                        playerContext.strokeText('Hit F5 to play again!', 500, 50);
 
-                            }
-                        });
+                    }
+                });
                 return;
             }
 
@@ -597,7 +604,8 @@ function startGame() {
             let pressedButton = event.keyCode;
 
             if (pressedButton === 32) {
-                alert('Game paused!');
+                alert(`Game Paused!
+                Hit space to resume`);
             }
         });
 
