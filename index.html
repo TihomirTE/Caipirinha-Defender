@@ -17,6 +17,14 @@
     <canvas id="rocket-canvas"></canvas>
     <canvas id="ball-canvas"></canvas>
     <canvas id="cannon-canvas"></canvas>
+    <!--SVG-->
+    <svg id="cannon-balls-svg" xmlns="http://www.w3.org/2000/svg">
+        <!-- Create the board. -->
+        <!--width="1024" height="600"-->
+        <!--<rect x="1" y="1" width="1024" height="600" fill="thistle" id="bpard" />-->
+        <!-- Create the ball. -->
+        <!--<circle cx="300" cy="300" r="3" fill="orange" id="ball" />-->
+    </svg>
 
 
     <!--IMAGES-->
@@ -62,16 +70,18 @@
 
 
     <!--SCRIPTS-->
+    <script src="./library/CanvasInput.js"></script>
+    <script src="./library/d3.min.js"></script>
+
     <script src="./javascript/backgroundGenerator.js"></script>
     <script src="./javascript/spritesGenerator.js"></script>
     <script src="./javascript/main.js"></script>
     <script src="./javascript/moveElements.js"></script>
     <script src="./javascript/spawnEnemies.js"></script>
     <script src="./javascript/LVL1Boss.js"></script>
-    <script src="./javascript/startScreenGenerator.js"></script>
-    <script src = './library/CanvasInput.js'></script>
+
     <script>
-        window.addEventListener("load",startGame);
+        window.addEventListener("load", startGame);
         // startGame();
         // backGroundLoop();
     </script>

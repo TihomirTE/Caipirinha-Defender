@@ -2,6 +2,7 @@
 
 function startGame() {
     "use strict";
+    //SVG
 
     const WIDTH = 1024;
     const HEIGHT = 600;
@@ -369,8 +370,56 @@ function startGame() {
         let levelNumber = 1;
         let rocketsDepot = [];
 
+
+        //SVG SETUP
+        //########################################
+        //########################################
+        //########################################
+        var svg = document.getElementById("cannon-balls-svg");
+        var svgCannonBall = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+        var ballX = 300; // Ball x position.
+        var ballY = 300; // Ball y position.
+        var ballR = 3;
+        var ballColor = "orange";
+
+        var ballDX = -0.5; // Change in ball x position.
+        var ballDY = -0.5; // Change in ball y position.
+
+        svgCannonBall.setAttribute("cx", ballX);
+        svgCannonBall.setAttribute("cy", ballY);
+        svgCannonBall.setAttribute("r", ballR);
+        svgCannonBall.setAttribute("fill", ballColor);
+        // svgCannonBall.setAttribute("id", "ball");
+        svg.appendChild(svgCannonBall);
+
+
+        console.log(svg);
+        console.log(svgCannonBall);
+
+        //########################################
+        //########################################
+        //########################################
+
+
         //execute moving operations (rendering)
         function gameLoop() {
+            // debugger;
+            //########################################
+            //########################################
+            //########################################
+            //SVG
+            ballX += ballDX;
+            ballY += ballDY;
+            svgCannonBall.setAttribute("cx", ballX);
+            svgCannonBall.setAttribute("cy", ballY);
+
+            //SVG
+            //########################################
+            //########################################
+            //########################################
+
+
             //PLAYER//
             let lastPlaneCoordinates = playerMove(plane);
             planeSprite.render(plane.coordinates, lastPlaneCoordinates);
@@ -529,7 +578,7 @@ function startGame() {
                                 blastSound.playbackRate = 3;
                                 blastSound.play();
                                 bossUnit.health -= 1;
-                                
+
                                 if (bossUnit.health < 1) {
 
                                     bossArmy.movable.splice(i, 1); //delete enemy from the army
@@ -555,45 +604,45 @@ function startGame() {
 
             //game winning
             if (bossArmy.movable.length === 0 && enemiesArmy.movable.length === 0) {
-                if (levelNumber === 5){
+                if (levelNumber === 5) {
                     //END GAME
-                playerContext.drawImage(document.getElementById('game-win'), 0, 0);
+                    playerContext.drawImage(document.getElementById('game-win'), 0, 0);
 
-                var input = new CanvasInput({
-                    canvas: document.getElementById('player-canvas'),
-                    fontSize: 18,
-                    fontFamily: 'Arial',
-                    fontColor: '#212121',
-                    fontWeight: 'bold',
-                    width: 200,
-                    padding: 8,
-                    borderWidth: 1,
-                    borderColor: '#000',
-                    borderRadius: 3,
-                    boxShadow: '1px 1px 0px #fff',
-                    innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-                    placeHolder: 'Enter nickname : '
-                });
+                    var input = new CanvasInput({
+                        canvas: document.getElementById('player-canvas'),
+                        fontSize: 18,
+                        fontFamily: 'Arial',
+                        fontColor: '#212121',
+                        fontWeight: 'bold',
+                        width: 200,
+                        padding: 8,
+                        borderWidth: 1,
+                        borderColor: '#000',
+                        borderRadius: 3,
+                        boxShadow: '1px 1px 0px #fff',
+                        innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+                        placeHolder: 'Enter nickname : '
+                    });
 
-                window.addEventListener('keydown', function (event) {
+                    window.addEventListener('keydown', function (event) {
 
-                    let pressedButton = event.keyCode;
-                    if (pressedButton === 13) {
-                        playerData.nickname = input.value();
-                        playerData.score = scoreCounter;
+                        let pressedButton = event.keyCode;
+                        if (pressedButton === 13) {
+                            playerData.nickname = input.value();
+                            playerData.score = scoreCounter;
 
-                        highScores.push(playerData);
+                            highScores.push(playerData);
 
-                        playerContext.fillStyle = 'white';
-                        playerContext.strokeStyle = 'white';
-                        playerContext.font = '32pt Times New Roman serif';
-                        playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100);
-                        playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
-                        playerContext.strokeText('Hit F5 to play again!', 500, 50);
+                            playerContext.fillStyle = 'white';
+                            playerContext.strokeStyle = 'white';
+                            playerContext.font = '32pt Times New Roman serif';
+                            playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100);
+                            playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
+                            playerContext.strokeText('Hit F5 to play again!', 500, 50);
 
-                    }
-                });
-                return;
+                        }
+                    });
+                    return;
                 } else {
                     levelNumber += 1;
                     enemiesSpeed += 0.1;
