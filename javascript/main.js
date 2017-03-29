@@ -2,10 +2,17 @@
 
 function startGame() {
     "use strict";
-    //SVG
 
     const WIDTH = 1024;
     const HEIGHT = 600;
+
+    //SVG to Canvas Pixel Conversion and vice versa
+    var windowHeight = window.innerHeight;
+    var windowWidth = window.innerWidth;
+    var convertToWindowHeightFactor = windowHeight / HEIGHT;
+    var convertToWindowWidthFactor = windowWidth / WIDTH;
+    var convertToCanvasHeightFactor = HEIGHT / windowHeight;
+    var convertToCanvasWidthFactor = WIDTH / windowWidth;
 
     let scoreCounter = 0;
     let nickname = '';
@@ -240,18 +247,19 @@ function startGame() {
         });
 
         //CANNON-BALLS//
-        //SVG SETUP
-        //########################################
-        //########################################
-        //########################################
         var svg = document.getElementById("cannon-balls-svg");
         var svgCannonBall = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 
-        var ballX = 300; // Ball x position.
-        var ballY = 300; // Ball y position.
-        var ballR = 3;
-        var ballColor = "orange";
 
+        //Positions of Cannons
+        // cannonContext.drawImage(cannonImage, 900, 520);
+        // cannonContext.drawImage(cannonImageTwo, 600, 520);
+        // cannonContext.drawImage(cannonImageThree, 300, 520);
+        var ballX = (convertToWindowWidthFactor * 600) + 10; // Ball x position.
+        var ballY = (convertToWindowHeightFactor * 520) + 10; // Ball y position.
+        //debugger collision ballX = 30, ballY = 180
+        var ballR = 5;
+        var ballColor = "orange";
         //relates to speed and angle
         // -> speed higher DX and DY is higher speed
         // -> different ratio denotes the angle
@@ -269,22 +277,16 @@ function startGame() {
             DOM: svgCannonBall,
             width: 2 * ballR,
             height: 2 * ballR,
-            coordinates: {
+            coordinatesWindow: {
                 x: parseInt(svgCannonBall.getAttribute("cx")),
                 y: parseInt(svgCannonBall.getAttribute("cy")),
+            },
+            coordinates: {
+                x: parseInt(svgCannonBall.getAttribute("cx")) * convertToCanvasWidthFactor,
+                y: parseInt(svgCannonBall.getAttribute("cy")) * convertToCanvasHeightFactor
             }
         };
-        console.log(svgElement);
-        // let minDistanceX = plane.width / 2 + enemyUnit.width / 2,
-        //     minDistanceY = plane.height / 2 + enemyUnit.height / 2,
 
-        //     actualDistanceX = Math.abs(plane.coordinates.x - enemyUnit.coordinates.x),
-        //     actualDistanceY = Math.abs(plane.coordinates.y - enemyUnit.coordinates.y);
-
-
-        //########################################
-        //########################################
-        //########################################
 
         let ballCanvas = document.getElementById('ball-canvas');
         let ballContext = cannonCanvas.getContext('2d');
@@ -419,6 +421,10 @@ function startGame() {
         //execute moving operations (rendering)
         function gameLoop() {
 
+            //BACKGROUND//
+            background.render();
+            background.update();
+
             //PLAYER//
             let lastPlaneCoordinates = playerMove(plane);
             planeSprite.render(plane.coordinates, lastPlaneCoordinates);
@@ -448,42 +454,29 @@ function startGame() {
                 }
             }
 
-            //ENEMY//
-
-            //CANNON
-
-            // debugger;
-            //########################################
-            //########################################
-            //########################################
-            //SVG
-
-            // var svgElement = {
-            //     DOM: svgCannonBall,
-            //     width: 2 * ballR,
-            //     height: 2 * ballR,
-            //     coordinates: {
-            //         x: parseInt(svgCannonBall.getAttribute("cx")),
-            //         y: parseInt(svgCannonBall.getAttribute("cy")),
-            //     }
-            // };
-            // console.log(svgElement);
-
-            ballX += ballDX;
-            ballY += ballDY;
-            svgCannonBall.setAttribute("cx", ballX);
-            svgCannonBall.setAttribute("cy", ballY);
-
-            //check for collision
-            // if (collidesWith(plane, enemyUnit) || (enemyUnit.coordinates.x < 0))
-            //SVG
-            //########################################
-            //########################################
-            //########################################
-            //will be removed - used temporarily for marking position//
+            //ENEMY - CANNONBALLS
+            //CANNONS
             cannonContext.drawImage(cannonImage, 900, 520);
             cannonContext.drawImage(cannonImageTwo, 600, 520);
             cannonContext.drawImage(cannonImageThree, 300, 520);
+            //Updating cannoball position
+
+            //updating DOM Position
+            svgElement.coordinatesWindow.x += ballDX;
+            svgElement.coordinatesWindow.y += ballDY;
+            svgElement.DOM.setAttribute("cx", svgElement.coordinatesWindow.x);
+            svgElement.DOM.setAttribute("cy", svgElement.coordinatesWindow.y);
+            //updating canvas internal position
+            svgElement.coordinates.x += ballDX * convertToCanvasWidthFactor;
+            svgElement.coordinates.y += ballDY * convertToCanvasHeightFactor;
+
+
+
+            var collisionWithBall = collidesWithCannon(plane, svgElement);
+            if (collisionWithBall) {
+                gameOver();
+                return;
+            }
 
             //ENEMY - ARMY
             for (let i = 0; i < enemiesArmy.movable.length; i += 1) {
@@ -645,9 +638,7 @@ function startGame() {
                     enemiesArmy = spawnEnemies(enemy, enemyContext, enemiesSpeed, WIDTH);
                 }
             }
-            //BACKGROUND//
-            background.render();
-            background.update();
+
             window.requestAnimationFrame(gameLoop);
         }
 
@@ -705,12 +696,26 @@ function startGame() {
         }
 
         function collidesWith(plane, enemyUnit) {
-
+            // debugger;
             let minDistanceX = plane.width / 2 + enemyUnit.width / 2,
                 minDistanceY = plane.height / 2 + enemyUnit.height / 2,
 
                 actualDistanceX = Math.abs(plane.coordinates.x - enemyUnit.coordinates.x),
                 actualDistanceY = Math.abs(plane.coordinates.y - enemyUnit.coordinates.y);
+
+            return ((minDistanceX >= actualDistanceX) && (minDistanceY >= actualDistanceY));
+        }
+
+        function collidesWithCannon(plane, cannonBall) {
+            //precision
+
+            let minDistanceX = 100,
+                minDistanceY = 100,
+                planeWindowCoordinatesX = plane.coordinates.x * convertToWindowWidthFactor,
+                planeWindowCoordinatesY = plane.coordinates.y * convertToWindowWidthFactor,
+
+                actualDistanceX = Math.abs(planeWindowCoordinatesX - cannonBall.coordinatesWindow.x),
+                actualDistanceY = Math.abs(planeWindowCoordinatesY - cannonBall.coordinatesWindow.y);
 
             return ((minDistanceX >= actualDistanceX) && (minDistanceY >= actualDistanceY));
         }
