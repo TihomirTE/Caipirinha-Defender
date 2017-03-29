@@ -6,6 +6,16 @@ function startGame() {
     const WIDTH = 1024;
     const HEIGHT = 600;
 
+    let scoreCounter = 0;
+    let nickname = '';
+
+    let playerData = {
+        nickname: nickname,
+        score: scoreCounter
+    };
+
+    let highScores = [];
+
 
     //MENU//
     let menuCanvas = document.getElementById("menu-canvas");
@@ -30,7 +40,7 @@ function startGame() {
         }
     }
 
-    let button = createButton({xLeft: 560, yUp: 270});
+    let button = createButton({ xLeft: 560, yUp: 270 });
     button.xRight = button.xLeft + playImage.width;
     button.yDown = button.yUp + playImage.height;
 
@@ -110,7 +120,7 @@ function startGame() {
         });
 
         let plane = createMovableElements({
-            direction: {x: 10, y: (HEIGHT / 2) - planeSprite.height}, // start position
+            direction: { x: 10, y: (HEIGHT / 2) - planeSprite.height }, // start position
             height: planeSprite.height,
             width: planeSprite.width,
             speed: 30
@@ -118,7 +128,7 @@ function startGame() {
 
         function playerMove(player) {
             //moves all directions
-            let previousPosition = {x: player.coordinates.x, y: player.coordinates.y};
+            let previousPosition = { x: player.coordinates.x, y: player.coordinates.y };
             //clear previous position in y coordinates
             player.coordinates.y = player.direction.y;
             //clear previous position in x coordinates
@@ -147,7 +157,7 @@ function startGame() {
         });
 
         let rocket = createMovableElements({
-            coordinates: {x: plane.direction.x + 10, y: plane.direction.y + 25}, // start position
+            coordinates: { x: plane.direction.x + 10, y: plane.direction.y + 25 }, // start position
             height: rocketSprite.height,
             width: rocketSprite.width,
             speed: 60
@@ -161,10 +171,10 @@ function startGame() {
         //autoshoot
         if (startShoting) {
             window.setInterval(function () {
-                    isRocketShoot = true;
-                    rocket.coordinates.x = plane.direction.x + 60;
-                    rocket.coordinates.y = plane.direction.y + 25;
-                },
+                isRocketShoot = true;
+                rocket.coordinates.x = plane.direction.x + 60;
+                rocket.coordinates.y = plane.direction.y + 25;
+            },
                 //time between shots
                 1000);
             startShoting = false;
@@ -248,7 +258,7 @@ function startGame() {
         });
 
         let ball = createMovableElements({
-            coordinates: {x: cannon.x + -10, y: cannon.y + -25}, // start position
+            coordinates: { x: cannon.x + -10, y: cannon.y + -25 }, // start position
             height: ballSprite.height,
             width: ballSprite.width,
             speed: 60
@@ -260,10 +270,10 @@ function startGame() {
         //autoshoot
         if (startShoting) {
             window.setInterval(function () {
-                    isBallShoot = true;
-                    ball.coordinates.x = cannon.x + 60;
-                    ball.coordinates.y = cannon.y + 25;
-                },
+                isBallShoot = true;
+                ball.coordinates.x = cannon.x + 60;
+                ball.coordinates.y = cannon.y + 25;
+            },
                 //time between shots
                 300);
             startShoting = false;
@@ -404,11 +414,46 @@ function startGame() {
 
                 //collide (game over)
                 if (collidesWith(plane, enemyUnit) || (enemyUnit.coordinates.x < 0)) {
+                    document.getElementById('explosion').play();
                     playerContext.drawImage(document.getElementById('plane-collision'),
                         plane.coordinates.x, plane.coordinates.y);
 
                     setTimeout(function () {
                         playerContext.drawImage(document.getElementById('game-over'), 0, 0);
+
+                        var input = new CanvasInput({
+                            canvas: document.getElementById('player-canvas'),
+                            fontSize: 18,
+                            fontFamily: 'Arial',
+                            fontColor: '#212121',
+                            fontWeight: 'bold',
+                            width: 300,
+                            padding: 8,
+                            borderWidth: 1,
+                            borderColor: '#000',
+                            borderRadius: 3,
+                            boxShadow: '1px 1px 0px #fff',
+                            innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+                            placeHolder: 'Enter nickname : '
+                        });
+
+                        window.addEventListener('keydown', function (event) {
+
+                            let pressedButton = event.keyCode;
+                            if (pressedButton === 13) {
+                                playerData.nickname = input.value();
+                                playerData.score = scoreCounter;
+
+                                highScores.push(playerData);
+
+                                playerContext.fillStyle = 'white';
+                                playerContext.font = '32pt Times New Roman serif';
+                                playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100 );
+                                playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
+                                playerContext.strokeText('Hit F5 to play again!', 500, 50);
+
+                            }
+                        });
                     }, 1000);
 
                     return;
@@ -430,7 +475,9 @@ function startGame() {
                             rocketUnit.coordinates.y >= (enemyUnit.coordinates.y - enemyUnit.height / 1.4) &&
                             rocketUnit.coordinates.y <= (enemyUnit.coordinates.y + enemyUnit.height / 1.4)) {
 
+                            document.getElementById('blast').play();
                             enemiesArmy.movable.splice(i, 1); //delete enemy from the army
+                            scoreCounter += 1; 
 
                             rocketContext.clearRect(rocketUnit.coordinates.x, rocketUnit.coordinates.y,
                                 rocketUnit.width, rocketUnit.height); //clear rocket
@@ -477,7 +524,9 @@ function startGame() {
                                 rocketUnit.coordinates.y <= (bossUnit.coordinates.y + bossUnit.height / 1.4)) {
                                 bossUnit.health -= 1;
                                 if (bossUnit.health < 1) {
+                                    document.getElementById('blast').play();
                                     bossArmy.movable.splice(i, 1); //delete enemy from the army
+                                    scoreCounter += 5;
 
                                     bossContext.clearRect(bossUnit.coordinates.x, bossUnit.coordinates.y,
                                         bossUnit.width, bossUnit.height); //clear enemy
@@ -500,6 +549,41 @@ function startGame() {
             //game winning
             if (bossArmy.movable.length === 0) {
                 playerContext.drawImage(document.getElementById('game-win'), 0, 0);
+
+                var input = new CanvasInput({
+                            canvas: document.getElementById('player-canvas'),
+                            fontSize: 18,
+                            fontFamily: 'Arial',
+                            fontColor: '#212121',
+                            fontWeight: 'bold',
+                            width: 300,
+                            padding: 8,
+                            borderWidth: 1,
+                            borderColor: '#000',
+                            borderRadius: 3,
+                            boxShadow: '1px 1px 0px #fff',
+                            innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+                            placeHolder: 'Enter nickname : '
+                        });
+
+                        window.addEventListener('keydown', function (event) {
+
+                            let pressedButton = event.keyCode;
+                            if (pressedButton === 13) {
+                                playerData.nickname = input.value();
+                                playerData.score = scoreCounter;
+
+                                highScores.push(playerData);
+
+                                playerContext.fillStyle = 'white';
+                                playerContext.strokeStyle = 'white';
+                                playerContext.font = '32pt Times New Roman serif';
+                                playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100 );
+                                playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
+                                playerContext.strokeText('Hit F5 to play again!', 500, 50);
+
+                            }
+                        });
                 return;
             }
 
@@ -508,6 +592,14 @@ function startGame() {
             background.update();
             window.requestAnimationFrame(gameLoop);
         }
+
+        window.addEventListener('keydown', function (event) {
+            let pressedButton = event.keyCode;
+
+            if (pressedButton === 32) {
+                alert('Game paused!');
+            }
+        });
 
         function collidesWith(plane, enemyUnit) {
 
