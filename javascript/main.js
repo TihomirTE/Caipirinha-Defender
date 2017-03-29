@@ -240,6 +240,52 @@ function startGame() {
         });
 
         //CANNON-BALLS//
+        //SVG SETUP
+        //########################################
+        //########################################
+        //########################################
+        var svg = document.getElementById("cannon-balls-svg");
+        var svgCannonBall = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+        var ballX = 300; // Ball x position.
+        var ballY = 300; // Ball y position.
+        var ballR = 3;
+        var ballColor = "orange";
+
+        //relates to speed and angle
+        // -> speed higher DX and DY is higher speed
+        // -> different ratio denotes the angle
+        var ballDX = -0.5; // Change in ball x position.
+        var ballDY = -0.5; // Change in ball y position.
+
+        svgCannonBall.setAttribute("cx", ballX);
+        svgCannonBall.setAttribute("cy", ballY);
+        svgCannonBall.setAttribute("r", ballR);
+        svgCannonBall.setAttribute("fill", ballColor);
+        // svgCannonBall.setAttribute("id", "ball");
+        svg.appendChild(svgCannonBall);
+
+        var svgElement = {
+            DOM: svgCannonBall,
+            width: 2 * ballR,
+            height: 2 * ballR,
+            coordinates: {
+                x: parseInt(svgCannonBall.getAttribute("cx")),
+                y: parseInt(svgCannonBall.getAttribute("cy")),
+            }
+        };
+        console.log(svgElement);
+        // let minDistanceX = plane.width / 2 + enemyUnit.width / 2,
+        //     minDistanceY = plane.height / 2 + enemyUnit.height / 2,
+
+        //     actualDistanceX = Math.abs(plane.coordinates.x - enemyUnit.coordinates.x),
+        //     actualDistanceY = Math.abs(plane.coordinates.y - enemyUnit.coordinates.y);
+
+
+        //########################################
+        //########################################
+        //########################################
+
         let ballCanvas = document.getElementById('ball-canvas');
         let ballContext = cannonCanvas.getContext('2d');
 
@@ -370,65 +416,12 @@ function startGame() {
         let levelNumber = 1;
         let rocketsDepot = [];
 
-
-        //SVG SETUP
-        //########################################
-        //########################################
-        //########################################
-        var svg = document.getElementById("cannon-balls-svg");
-        var svgCannonBall = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-
-        var ballX = 300; // Ball x position.
-        var ballY = 300; // Ball y position.
-        var ballR = 3;
-        var ballColor = "orange";
-
-        var ballDX = -0.5; // Change in ball x position.
-        var ballDY = -0.5; // Change in ball y position.
-
-        svgCannonBall.setAttribute("cx", ballX);
-        svgCannonBall.setAttribute("cy", ballY);
-        svgCannonBall.setAttribute("r", ballR);
-        svgCannonBall.setAttribute("fill", ballColor);
-        // svgCannonBall.setAttribute("id", "ball");
-        svg.appendChild(svgCannonBall);
-
-
-        console.log(svg);
-        console.log(svgCannonBall);
-
-        //########################################
-        //########################################
-        //########################################
-
-
         //execute moving operations (rendering)
         function gameLoop() {
-            // debugger;
-            //########################################
-            //########################################
-            //########################################
-            //SVG
-            ballX += ballDX;
-            ballY += ballDY;
-            svgCannonBall.setAttribute("cx", ballX);
-            svgCannonBall.setAttribute("cy", ballY);
-
-            //SVG
-            //########################################
-            //########################################
-            //########################################
-
 
             //PLAYER//
             let lastPlaneCoordinates = playerMove(plane);
             planeSprite.render(plane.coordinates, lastPlaneCoordinates);
-
-            //CANNON
-            //will be removed - used temporarily for marking position//
-            cannonContext.drawImage(cannonImage, 900, 520);
-            cannonContext.drawImage(cannonImageTwo, 600, 520);
-            cannonContext.drawImage(cannonImageThree, 300, 520);
 
             //ROCKETS//
             if (isRocketShoot) {
@@ -456,6 +449,43 @@ function startGame() {
             }
 
             //ENEMY//
+
+            //CANNON
+
+            // debugger;
+            //########################################
+            //########################################
+            //########################################
+            //SVG
+
+            // var svgElement = {
+            //     DOM: svgCannonBall,
+            //     width: 2 * ballR,
+            //     height: 2 * ballR,
+            //     coordinates: {
+            //         x: parseInt(svgCannonBall.getAttribute("cx")),
+            //         y: parseInt(svgCannonBall.getAttribute("cy")),
+            //     }
+            // };
+            // console.log(svgElement);
+
+            ballX += ballDX;
+            ballY += ballDY;
+            svgCannonBall.setAttribute("cx", ballX);
+            svgCannonBall.setAttribute("cy", ballY);
+
+            //check for collision
+            // if (collidesWith(plane, enemyUnit) || (enemyUnit.coordinates.x < 0))
+            //SVG
+            //########################################
+            //########################################
+            //########################################
+            //will be removed - used temporarily for marking position//
+            cannonContext.drawImage(cannonImage, 900, 520);
+            cannonContext.drawImage(cannonImageTwo, 600, 520);
+            cannonContext.drawImage(cannonImageThree, 300, 520);
+
+            //ENEMY - ARMY
             for (let i = 0; i < enemiesArmy.movable.length; i += 1) {
                 let enemyUnit = enemiesArmy.movable[i];
                 let lastEnemyCoordinates = enemyUnit.move('left');
@@ -463,47 +493,8 @@ function startGame() {
 
                 //collide (game over)
                 if (collidesWith(plane, enemyUnit) || (enemyUnit.coordinates.x < 0)) {
-                    document.getElementById('explosion').play();
-                    playerContext.drawImage(document.getElementById('plane-collision'),
-                        plane.coordinates.x, plane.coordinates.y);
 
-                    setTimeout(function () {
-                        playerContext.drawImage(document.getElementById('game-over'), 0, 0);
-
-                        var input = new CanvasInput({
-                            canvas: document.getElementById('player-canvas'),
-                            fontSize: 18,
-                            fontFamily: 'Arial',
-                            fontColor: '#212121',
-                            fontWeight: 'bold',
-                            width: 200,
-                            padding: 8,
-                            borderWidth: 1,
-                            borderColor: '#000',
-                            borderRadius: 3,
-                            boxShadow: '1px 1px 0px #fff',
-                            innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-                            placeHolder: 'Enter nickname : '
-                        });
-
-                        window.addEventListener('keydown', function (event) {
-
-                            let pressedButton = event.keyCode;
-                            if (pressedButton === 13) {
-                                playerData.nickname = input.value();
-                                playerData.score = scoreCounter;
-
-                                highScores.push(playerData);
-
-                                playerContext.fillStyle = 'white';
-                                playerContext.font = '32pt Times New Roman serif';
-                                playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100);
-                                playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
-                                playerContext.strokeText('Hit F5 to play again!', 500, 50);
-
-                            }
-                        });
-                    }, 1000);
+                    gameOver();
 
                     return;
                 }
@@ -668,6 +659,50 @@ function startGame() {
                 Hit space to resume`);
             }
         });
+
+        function gameOver() {
+            document.getElementById('explosion').play();
+            playerContext.drawImage(document.getElementById('plane-collision'),
+                plane.coordinates.x, plane.coordinates.y);
+
+            setTimeout(function () {
+                playerContext.drawImage(document.getElementById('game-over'), 0, 0);
+
+                var input = new CanvasInput({
+                    canvas: document.getElementById('player-canvas'),
+                    fontSize: 18,
+                    fontFamily: 'Arial',
+                    fontColor: '#212121',
+                    fontWeight: 'bold',
+                    width: 200,
+                    padding: 8,
+                    borderWidth: 1,
+                    borderColor: '#000',
+                    borderRadius: 3,
+                    boxShadow: '1px 1px 0px #fff',
+                    innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
+                    placeHolder: 'Enter nickname : '
+                });
+
+                window.addEventListener('keydown', function (event) {
+
+                    let pressedButton = event.keyCode;
+                    if (pressedButton === 13) {
+                        playerData.nickname = input.value();
+                        playerData.score = scoreCounter;
+
+                        highScores.push(playerData);
+
+                        playerContext.fillStyle = 'white';
+                        playerContext.font = '32pt Times New Roman serif';
+                        playerContext.fillText(`Nickname : ${highScores[0].nickname}`, 10, 100);
+                        playerContext.fillText(`Score : ${highScores[0].score}`.trim(), 10, 150);
+                        playerContext.strokeText('Hit F5 to play again!', 500, 50);
+
+                    }
+                });
+            }, 1000);
+        }
 
         function collidesWith(plane, enemyUnit) {
 
