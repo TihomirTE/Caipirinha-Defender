@@ -15,5 +15,4 @@
 
 :bulb: [**Project description**](./docs/Project-description.md)
 
-:rocket: [**Website of the application**] (https://caipirinha-def.herokuapp.com/)
-
+:rocket: [**Website of the application**](https://caipirinha-def.herokuapp.com/)
