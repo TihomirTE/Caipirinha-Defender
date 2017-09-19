@@ -14,3 +14,6 @@
 8. Pavel Yankov - [_pavelYankov_](https://github.com/pavelYankov) 
 
 :bulb: [**Project description**](./docs/Project-description.md)
+
+:rocket: [**Website of the application**] (https://caipirinha-def.herokuapp.com/)
+
