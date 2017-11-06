@@ -177,16 +177,16 @@ function startGame() {
 
 
         //autoshoot
-        if (startShoting) {
-            window.setInterval(function() {
-                    isRocketShoot = true;
-                    rocket.coordinates.x = plane.direction.x + 60;
-                    rocket.coordinates.y = plane.direction.y + 25;
-                },
-                //time between shots
-                1000);
-            startShoting = false;
-        }
+        // if (startShoting) {
+        //     window.setInterval(function() {
+        //             isRocketShoot = true;
+        //             rocket.coordinates.x = plane.direction.x + 60;
+        //             rocket.coordinates.y = plane.direction.y + 25;
+        //         },
+        //         //time between shots
+        //         1000);
+        //     startShoting = false;
+        // }
 
         //ENEMY//
         let enemyCanvas = document.getElementById('enemy-canvas');
@@ -400,6 +400,15 @@ function startGame() {
                 }
             }
 
+            // plane shoot
+            if (pressedButton === 32) {
+                if (isButtonFree) {
+                    isRocketShoot = true;
+                    rocket.coordinates.x = plane.direction.x + 60;
+                    rocket.coordinates.y = plane.direction.y + 25;
+                }
+            }
+
         });
 
         window.addEventListener('keyup', function(event) {
@@ -442,7 +451,8 @@ function startGame() {
 
                 rocketSprite.render(rocket.coordinates, lastRocketCoordinates);
                 rocketsDepot.push(rocket);
-                if (rocket.coordinates.x < WIDTH - enemy.width) {
+                if (isMovingForward && rocket.coordinates.x < WIDTH - enemy.width ||
+                    !isMovingForward && rocket.coordinates.x > WIDTH) {
                     isButtonFree = false;
                 } else {
                     isButtonFree = true;
