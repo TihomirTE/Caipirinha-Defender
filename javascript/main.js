@@ -178,11 +178,11 @@ function startGame() {
 
         //autoshoot
         if (startShoting) {
-            window.setInterval(function () {
-                isRocketShoot = true;
-                rocket.coordinates.x = plane.direction.x + 60;
-                rocket.coordinates.y = plane.direction.y + 25;
-            },
+            window.setInterval(function() {
+                    isRocketShoot = true;
+                    rocket.coordinates.x = plane.direction.x + 60;
+                    rocket.coordinates.y = plane.direction.y + 25;
+                },
                 //time between shots
                 1000);
             startShoting = false;
@@ -316,11 +316,11 @@ function startGame() {
         let isBallShoot = false;
         //autoshoot
         if (startShoting) {
-            window.setInterval(function () {
-                isBallShoot = true;
-                ball.coordinates.x = cannon.x + 60;
-                ball.coordinates.y = cannon.y + 25;
-            },
+            window.setInterval(function() {
+                    isBallShoot = true;
+                    ball.coordinates.x = cannon.x + 60;
+                    ball.coordinates.y = cannon.y + 25;
+                },
                 //time between shots
                 300);
             startShoting = false;
@@ -345,7 +345,7 @@ function startGame() {
         let isButtonFree = true,
             isEnemyKilled = false;
 
-        window.addEventListener('keydown', function (event) {
+        window.addEventListener('keydown', function(event) {
             let pressedButton = event.keyCode;
 
             // forward
@@ -402,7 +402,7 @@ function startGame() {
 
         });
 
-        window.addEventListener('keyup', function (event) {
+        window.addEventListener('keyup', function(event) {
             let upButton = event.keyCode;
 
             //normalize plane position image
@@ -608,7 +608,7 @@ function startGame() {
                         placeHolder: 'Enter nickname : '
                     });
 
-                    window.addEventListener('keydown', function (event) {
+                    window.addEventListener('keydown', function(event) {
 
                         let pressedButton = event.keyCode;
                         if (pressedButton === 13) {
@@ -642,12 +642,12 @@ function startGame() {
             window.requestAnimationFrame(gameLoop);
         }
 
-        window.addEventListener('keydown', function (event) {
+        window.addEventListener('keydown', function(event) {
             let pressedButton = event.keyCode;
 
-            if (pressedButton === 32) {
+            if (pressedButton === 80) {
                 alert(`Game Paused!
-                Hit space to resume`);
+                Click OK to Resume`);
             }
         });
 
@@ -656,7 +656,7 @@ function startGame() {
             playerContext.drawImage(document.getElementById('plane-collision'),
                 plane.coordinates.x, plane.coordinates.y);
 
-            setTimeout(function () {
+            setTimeout(function() {
                 playerContext.drawImage(document.getElementById('game-over'), 0, 0);
 
                 var input = new CanvasInput({
@@ -675,7 +675,7 @@ function startGame() {
                     placeHolder: 'Enter nickname : '
                 });
 
-                window.addEventListener('keydown', function (event) {
+                window.addEventListener('keydown', function(event) {
 
                     let pressedButton = event.keyCode;
                     if (pressedButton === 13) {
