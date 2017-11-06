@@ -12,3 +12,7 @@
 6. Plamen Atanasov - [_plmntnsv_](https://github.com/plmntnsv) 
 7. Lazar Lyutakov - [_lazarlyutakov_](https://github.com/lazarlyutakov) 
 8. Pavel Yankov - [_pavelYankov_](https://github.com/pavelYankov) 
+
+:bulb: [**Project description**](./docs/Project-description.md)
+
+:rocket: [**Website of the application**](https://caipirinha-def.herokuapp.com/)
